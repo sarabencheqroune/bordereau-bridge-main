@@ -1,0 +1,26 @@
+[Unit]
+Description=Impression locale des bordereaux
+After=network.target cups.service
+Wants=cups.service
+
+[Service]
+User=bordereau
+Group=bordereau
+SupplementaryGroups=lp
+WorkingDirectory=/opt/bordereau
+EnvironmentFile=/etc/bordereau/config.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/bordereau/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 1
+Restart=on-failure
+RestartSec=5
+StateDirectory=bordereau
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/bordereau
+
+[Install]
+WantedBy=multi-user.target
